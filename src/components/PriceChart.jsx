@@ -11,25 +11,11 @@ const MAX_POINTS = 200
 export default function PriceChart() {
   const wsRef = useRef(null)
   const openPriceRef = useRef(null)
-  const containerRef = useRef(null)
 
   const [points, setPoints] = useState([])
-  const [dims, setDims] = useState({ w: 0, h: 0 })
   const [price, setPrice] = useState(null)
   const [change, setChange] = useState(null)
   const [status, setStatus] = useState('loading')
-
-  useEffect(() => {
-    const el = containerRef.current
-    if (!el) return
-    const ro = new ResizeObserver(([entry]) => {
-      const { width, height } = entry.contentRect
-      setDims({ w: Math.floor(width), h: Math.floor(height) })
-    })
-    ro.observe(el)
-    setDims({ w: Math.floor(el.offsetWidth), h: Math.floor(el.offsetHeight) })
-    return () => ro.disconnect()
-  }, [])
 
   useEffect(() => {
     const fetchCandles = async () => {
@@ -44,7 +30,6 @@ export default function PriceChart() {
         })
         const candles = await res.json()
         if (!Array.isArray(candles) || candles.length === 0) { setStatus('no-data'); return }
-        // liveline expects time in seconds
         const pts = candles.map(c => ({ time: Math.floor(c.t / 1000), value: parseFloat(c.c) }))
         setPoints(pts)
         const latest = pts[pts.length - 1].value
@@ -92,6 +77,11 @@ export default function PriceChart() {
   const color = up ? '#00d084' : '#f85149'
   const changeSign = change !== null && change >= 0 ? '+' : ''
 
+  // Show the full loaded window of data
+  const windowSecs = points.length >= 2
+    ? points[points.length - 1].time - points[0].time
+    : CANDLE_LOOKBACK_MS / 1000
+
   return (
     <div className="chart-panel">
       <div className="chart-header">
@@ -107,20 +97,20 @@ export default function PriceChart() {
         </div>
       </div>
 
-      <div className="chart-container" ref={containerRef}>
-        {points.length > 0 && dims.w > 0 && dims.h > 0 && (
-          <Liveline
-            data={points}
-            value={price}
-            color={color}
-            theme="dark"
-            width={dims.w}
-            height={dims.h}
-            fill
-            pulse
-            grid
-          />
-        )}
+      <div className="chart-container">
+        <Liveline
+          data={points}
+          value={price ?? 0}
+          color={color}
+          theme="dark"
+          window={windowSecs}
+          loading={status === 'loading'}
+          fill
+          pulse
+          grid
+          exaggerate
+          formatValue={v => `$${v.toFixed(2)}`}
+        />
       </div>
 
       <div className="chart-footer">
