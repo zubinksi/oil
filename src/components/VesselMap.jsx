@@ -65,7 +65,7 @@ export default function VesselMap() {
 
       ws.onopen = () => {
         ws.send(JSON.stringify({
-          Apikey: AISSTREAM_KEY,
+          APIKey: AISSTREAM_KEY,
           BoundingBoxes: BOUNDING_BOX,
           FilterMessageTypes: ['PositionReport', 'ShipStaticData'],
         }))
