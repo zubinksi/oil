@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { createChart, ColorType, CrosshairMode, LineStyle } from 'lightweight-charts'
 
 // Hyperliquid tradfi coin name for WTI Crude Oil (HIP-3, listed by xyz)
-const COIN = 'WTIOIL'
+const COIN = 'CL'
 const INTERVAL = '1m'
 const HL_REST = 'https://api.hyperliquid.xyz/info'
 const HL_WS = 'wss://api.hyperliquid.xyz/ws'
