@@ -4,6 +4,10 @@ import L from 'leaflet'
 const AISSTREAM_KEY = 'cbddefbb079f6976839f9afc28408b984ab0309f'
 // Strait of Hormuz through Gulf of Oman entrance
 const BOUNDING_BOX = [[[22.0, 55.0], [28.0, 62.0]]]
+// In dev, route through Vite proxy to avoid Origin header rejection
+const AIS_URL = import.meta.env.DEV
+  ? `ws://${location.host}/ais-proxy`
+  : 'wss://stream.aisstream.io/v0/stream'
 const MAP_CENTER = [26.0, 57.5]
 const MAP_ZOOM = 7
 
@@ -60,7 +64,7 @@ export default function VesselMap() {
     mapInstance.current = map
 
     const connect = () => {
-      const ws = new WebSocket('wss://stream.aisstream.io/v0/stream')
+      const ws = new WebSocket(AIS_URL)
       wsRef.current = ws
 
       ws.onopen = () => {
