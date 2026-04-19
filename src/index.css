@@ -24,8 +24,7 @@ body {
 /* ── Chart panel ── */
 
 .chart-panel {
-  width: 38%;
-  min-width: 300px;
+  width: 50%;
   display: flex;
   flex-direction: column;
   border-right: 1px solid #21262d;
@@ -92,23 +91,13 @@ body {
 
 .map-panel {
   flex: 1;
-  position: relative;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
-.map-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 30px;
-}
-
 .map-statusbar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  flex-shrink: 0;
   height: 30px;
   display: flex;
   align-items: center;
@@ -206,4 +195,29 @@ body {
 .leaflet-control-zoom a:hover {
   background-color: #21262d !important;
   color: #e6edf3 !important;
+}
+
+/* ── Mobile: stack chart above map ── */
+
+@media (max-width: 768px) {
+  html, body, #root {
+    overflow: auto;
+  }
+
+  .app {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .chart-panel {
+    width: 100%;
+    height: 50vh;
+    border-right: none;
+    border-bottom: 1px solid #21262d;
+  }
+
+  .map-panel {
+    height: 50vh;
+  }
 }

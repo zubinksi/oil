@@ -1,7 +1,3 @@
-// AISStream is blocked pending their domain-allowlist configuration.
-// Using VesselFinder free embed (live data, same coverage area) until resolved.
-// To switch back to AISStream: restore the Leaflet + WebSocket implementation.
-
 const EMBED_URL =
   'https://www.vesselfinder.com/aismap' +
   '?lat=26.3&lon=57.2&zoom=7' +
@@ -12,10 +8,9 @@ export default function VesselMap() {
     <div className="map-panel">
       <iframe
         src={EMBED_URL}
-        className="map-container"
-        frameBorder="0"
         title="Vessel traffic – Strait of Hormuz"
         allowFullScreen
+        style={{ flex: 1, minHeight: 0, border: 'none', display: 'block', width: '100%' }}
       />
       <div className="map-statusbar">
         <span className="map-region">Strait of Hormuz · Gulf of Oman</span>
