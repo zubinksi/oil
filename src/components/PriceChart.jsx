@@ -11,11 +11,25 @@ const MAX_POINTS = 200
 export default function PriceChart() {
   const wsRef = useRef(null)
   const openPriceRef = useRef(null)
+  const containerRef = useRef(null)
 
   const [points, setPoints] = useState([])
+  const [dims, setDims] = useState({ w: 0, h: 0 })
   const [price, setPrice] = useState(null)
   const [change, setChange] = useState(null)
   const [status, setStatus] = useState('loading')
+
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const ro = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect
+      setDims({ w: Math.floor(width), h: Math.floor(height) })
+    })
+    ro.observe(el)
+    setDims({ w: Math.floor(el.offsetWidth), h: Math.floor(el.offsetHeight) })
+    return () => ro.disconnect()
+  }, [])
 
   useEffect(() => {
     const fetchCandles = async () => {
@@ -93,13 +107,15 @@ export default function PriceChart() {
         </div>
       </div>
 
-      <div className="chart-container">
-        {points.length > 0 && (
+      <div className="chart-container" ref={containerRef}>
+        {points.length > 0 && dims.w > 0 && dims.h > 0 && (
           <Liveline
             data={points}
             value={price}
             color={color}
             theme="dark"
+            width={dims.w}
+            height={dims.h}
             fill
             pulse
             grid
