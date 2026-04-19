@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/ais-proxy",
+      "destination": "https://stream.aisstream.io/v0/stream"
+    }
+  ]
+}
